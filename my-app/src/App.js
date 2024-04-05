@@ -4,28 +4,27 @@ import QuestionnaireComponent from './QuestionnaireComponent';
 import DashboardComponent from './DashboardComponent';
 
 const App = () => {
-  const [scores, setScores] = useState({}); // State to hold quality maturity scores
+  const [score, setScore] = useState(0); // State to hold the score
 
-  // Function to calculate scores based on questionnaire responses
-  const calculateScores = (responses) => {
-    // Calculate scores based on responses
-    // This is where you would implement your logic to calculate scores
-    // and update the 'scores' state
-    const calculatedScores = {
-      low: 20,
-      medium: 50,
-      high: 30,
-    };
-    setScores(calculatedScores);
+  // Function to calculate score based on selected choices
+  const calculateScore = (choices) => {
+    const numSelected = Object.values(choices).filter(choice => choice).length;
+    // Assign a score based on the number of selected choices
+    let newScore = 0;
+    if (numSelected === 1) {
+      newScore = 1;
+    } else if (numSelected === 2) {
+      newScore = 2;
+    } else if (numSelected === 3) {
+      newScore = 3;
+    }
+    setScore(newScore);
   };
 
   return (
     <div>
-      {/* Render the QuestionnaireComponent */}
-      <QuestionnaireComponent onSubmit={calculateScores} />
-
-      {/* Render the DashboardComponent with calculated scores */}
-      {Object.keys(scores).length > 0 && <DashboardComponent scores={scores} />}
+      <QuestionnaireComponent onSubmit={calculateScore} />
+      <DashboardComponent score={score} />
     </div>
   );
 };

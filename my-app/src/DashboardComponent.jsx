@@ -1,45 +1,37 @@
 // DashboardComponent.jsx
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
 
-const DashboardComponent = ({ scores }) => {
-  const canvasRef = useRef(null);
-  let myChart;
+const DashboardComponent = ({ score }) => {
+  // Calculate percentage
+  const percentage = (score / 3) * 100; // Assuming maximum score is 3
 
-  useEffect(() => {
-    // Ensure previous chart instance is destroyed before rendering a new one
-    if (myChart) {
-      myChart.destroy();
-    }
+  // Define colors based on percentage
+  let color;
+  if (percentage >= 75) {
+    color = 'green';
+  } else if (percentage >= 50) {
+    color = 'yellow';
+  } else {
+    color = 'red';
+  }
 
-    // Render new chart
-    const ctx = canvasRef.current.getContext('2d');
-    myChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Low Quality', 'Medium Quality', 'High Quality'],
-        datasets: [
-          {
-            data: [scores.low, scores.medium, scores.high],
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          },
-        ],
+  // Data for the chart
+  const data = {
+    labels: ['Score'],
+    datasets: [
+      {
+        label: 'Score',
+        backgroundColor: color,
+        data: [score],
       },
-    });
-
-    // Clean up chart instance on component unmount
-    return () => {
-      if (myChart) {
-        myChart.destroy();
-      }
-    };
-  }, [scores]);
+    ],
+  };
 
   return (
     <div>
       <h2>Quality Maturity Dashboard</h2>
-      <canvas ref={canvasRef} />
+      <Bar data={data} />
     </div>
   );
 };

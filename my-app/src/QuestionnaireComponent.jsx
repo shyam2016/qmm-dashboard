@@ -1,6 +1,6 @@
 // QuestionnaireComponent.jsx
 import React, { useState } from 'react';
-
+import './QuestionnaireComponent.css'; 
 const QuestionnaireComponent = ({ onSubmit }) => {
   const [testAutomation, setTestAutomation] = useState({
     unitTest: false,
@@ -14,17 +14,13 @@ const QuestionnaireComponent = ({ onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    let score = 0;
-    if (testAutomation.unitTest) score += 1;
-    if (testAutomation.smokeTest) score += 1;
-    if (testAutomation.acceptanceTest) score += 1;
-    onSubmit(score);
+    onSubmit(testAutomation);
   };
 
   return (
-    <div>
+    <div className="questionnaire-container">
       <h2>Test Automation Questionnaire</h2>
-      <div>
+      <div className="checkbox-container">
         <label>
           <input
             type="checkbox"
@@ -35,7 +31,7 @@ const QuestionnaireComponent = ({ onSubmit }) => {
           Unit Test
         </label>
       </div>
-      <div>
+      <div className="checkbox-container">
         <label>
           <input
             type="checkbox"
@@ -46,7 +42,7 @@ const QuestionnaireComponent = ({ onSubmit }) => {
           Smoke Test
         </label>
       </div>
-      <div>
+      <div className="checkbox-container">
         <label>
           <input
             type="checkbox"
@@ -57,7 +53,7 @@ const QuestionnaireComponent = ({ onSubmit }) => {
           Acceptance Test
         </label>
       </div>
-      <button onClick={handleSubmit}>Submit</button>
+      <button className="submit-button" onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
