@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './QuestionnaireComponent.css'; // Import CSS file for styling
 
 const QuestionnaireComponent = ({ onSubmit }) => {
+  const [selectedApplication, setSelectedApplication] = useState('');
   const [surveyResponses, setSurveyResponses] = useState({
     testAutomation: {
       unitTest: false,
@@ -14,7 +15,12 @@ const QuestionnaireComponent = ({ onSubmit }) => {
       analyticsMonitoring: false,
       glassBoxMonitoring: false,
     },
+    numberOfBranches: '', // New category for number of Git branches
   });
+
+  const handleApplicationChange = (event) => {
+    setSelectedApplication(event.target.value);
+  };
 
   const handleCheckboxChange = (event, category) => {
     const { name, checked } = event.target;
@@ -24,13 +30,29 @@ const QuestionnaireComponent = ({ onSubmit }) => {
     }));
   };
 
+  const handleDropdownChange = (event) => {
+    const { value } = event.target;
+    setSurveyResponses(prevState => ({
+      ...prevState,
+      numberOfBranches: value,
+    }));
+  };
+
   const handleSubmit = () => {
-    onSubmit(surveyResponses);
+    onSubmit(selectedApplication, surveyResponses);
   };
 
   return (
     <div className="questionnaire-container">
       <h2>Questionnaire</h2>
+      <div className="application-dropdown">
+      <select value={selectedApplication} onChange={handleApplicationChange}>
+        <option value="">Select Application</option>
+        <option value="Application 1">Application 1</option>
+        <option value="Application 2">Application 2</option>
+        <option value="Application 3">Application 3</option>
+      </select>
+    </div>
       <div className="category">
         <h3>Test Automation</h3>
         <div className="checkbox-container">
@@ -102,6 +124,15 @@ const QuestionnaireComponent = ({ onSubmit }) => {
             GlassBox Monitoring
           </label>
         </div>
+        <div className="category">
+        <h3>Number of Git Branches</h3>
+        <select value={surveyResponses.numberOfBranches} onChange={handleDropdownChange}>
+          <option value="">Select</option>
+          <option value="lessThan5">Less than 5</option>
+          <option value="lessThan10">Less than 10</option>
+          <option value="greaterThan10">Greater than 10</option>
+        </select>
+      </div>
       </div>
       <button className="submit-button" onClick={handleSubmit}>Submit</button>
     </div>

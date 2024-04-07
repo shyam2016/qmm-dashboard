@@ -4,10 +4,16 @@ import QuestionnaireComponent from './QuestionnaireComponent';
 import DashboardComponent from './DashboardComponent';
 
 const ParentComponent = () => {
+    const [selectedApplication, setSelectedApplication] = useState('');
   const [surveyResponses, setSurveyResponses] = useState(null);
 
-  const handleSurveySubmit = (responses) => {
+  const handleSurveySubmit = (application,responses) => {
+    setSelectedApplication(application);
     setSurveyResponses(responses);
+  };
+
+  const handleBackButtonClick = () => {
+    setSurveyResponses(null); // Reset survey responses to navigate back to QuestionnaireComponent
   };
 
   return (
@@ -16,7 +22,11 @@ const ParentComponent = () => {
       {!surveyResponses ? (
         <QuestionnaireComponent onSubmit={handleSurveySubmit} />
       ) : (
-        <DashboardComponent surveyResponses={surveyResponses} />
+        <DashboardComponent
+        selectedApplication={selectedApplication}
+        surveyResponses={surveyResponses}
+        onBackButtonClick={handleBackButtonClick}
+      />
       )}
     </div>
   );

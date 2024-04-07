@@ -1,10 +1,11 @@
 // DashboardComponent.jsx
+import './DashboardComponent.css'
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
-const DashboardComponent = ({ surveyResponses }) => {
+const DashboardComponent = ({ selectedApplication, surveyResponses, onBackButtonClick }) => {
   const [chartKey, setChartKey] = useState(0); // Key to force re-rendering of the chart
 
   useEffect(() => {
@@ -31,24 +32,34 @@ const DashboardComponent = ({ surveyResponses }) => {
     }
   };
 
+  const numberOfBranches = surveyResponses.numberOfBranches;
+  let numberOfBranchesPercentage = 0;
+  if (numberOfBranches === 'lessThan5') {
+    numberOfBranchesPercentage = 100; // Green
+  } else if (numberOfBranches === 'lessThan10') {
+    numberOfBranchesPercentage = 75; // Yellow
+  } else if (numberOfBranches === 'greaterThan10') {
+    numberOfBranchesPercentage = 50; // Red
+  }
   // Data for the chart
   const data = {
-    labels: ['Test Automation', 'Monitoring'],
+    labels: ['Test Automation', 'Monitoring', 'Number of Git Branches'],
     datasets: [
       {
         label: 'Responses',
         backgroundColor: [
           getColor(testAutomationPercentage),
           getColor(monitoringPercentage),
+          getColor(numberOfBranchesPercentage),
         ],
-        data: [testAutomationPercentage, monitoringPercentage],
+        data: [testAutomationPercentage, monitoringPercentage, numberOfBranchesPercentage],
       },
     ],
   };
 
   return (
-    <div>
-      <h2>Survey Results</h2>
+    <div className="dashboard-container">
+    <h2>Survey Results for {selectedApplication}</h2>
       <Bar
         key={chartKey} // Key prop to force re-rendering of the chart
         data={data}
@@ -65,6 +76,7 @@ const DashboardComponent = ({ surveyResponses }) => {
           },
         }}
       />
+      <button className="back-button" onClick={onBackButtonClick}>Back to Questionnaire</button>
     </div>
   );
 };
